@@ -24,11 +24,25 @@ class ObjectNode(Node):
 
     def token_literal(self):
         return  
+    
+class ValueNode(Node):
+    def __init__(self) -> None:
+        self.value: Token | ArrayNode | ObjectNode = None
+
+    def token_literal(self):
+        return  
+    
+class ArrayNode(Node):
+    def __init__(self) -> None:
+        self.elements: List[Token] = []
+
+    def token_literal(self):
+        return  
 
 class MemberNode(Node):
     def __init__(self) -> None:
         self.key: Token | None = None
-        self.value = None
+        self.value: ValueNode = None
     
     def token_literal(self):
         return 

@@ -1,5 +1,5 @@
 from .lexer import Lexer, TokenTypes, Token
-from .ast import ProgramNode, ObjectNode, MemberNode
+from .ast import ProgramNode, ObjectNode, MemberNode, ValueNode, ArrayNode
 
 class Parser:
     def __init__(self, input: str) -> None:
@@ -12,11 +12,44 @@ class Parser:
         self.currentToken = self.peekToken
         self.peekToken = self.lexer.nextToken()
 
+    def parseArray(self):
+        arrayNode = ArrayNode()
+        self.nextToken()
+        accepted_value_token_types = [TokenTypes.STRING, TokenTypes.NUMERIC, TokenTypes.BOOLEAN_FALSE, TokenTypes.BOOLEAN_TRUE, TokenTypes.NULL]
+        while self.currentToken.type != TokenTypes.RIGHT_BRACKET:
+            if self.currentToken.type in accepted_value_token_types:
+                arrayNode.elements.append(self.currentToken)
+                self.nextToken()
+                if self.currentToken.type == TokenTypes.COMMA:
+                    if self.peekToken.type in accepted_value_token_types:
+                        self.nextToken()
+                    else:
+                        raise Exception(f'Unrecognised array element {self.peekToken.literal}')
+                else:
+                    if self.currentToken.type == TokenTypes.RIGHT_BRACKET:
+                        continue
+                    else:
+                        raise Exception(f'Unrecognised array element {self.currentToken.literal}')
+
+            else:
+                raise Exception(f'Unrecognised array element {self.currentToken.literal}')
+        return arrayNode
+
     def parseValue(self) -> Token:
-        if self.currentToken.type != TokenTypes.STRING:
+        valueNode = ValueNode()
+        accepted_value_token_types = [TokenTypes.STRING, TokenTypes.NUMERIC, TokenTypes.BOOLEAN_FALSE, TokenTypes.BOOLEAN_TRUE, TokenTypes.NULL]
+        if self.currentToken.type in accepted_value_token_types:
+            valueNode.value = self.currentToken
+        elif self.currentToken.type == TokenTypes.LEFT_BRACKET:
+            arrayNode = self.parseArray()
+            valueNode.value = arrayNode
+        elif self.currentToken.type == TokenTypes.LEFT_BRACE:
+            objectNode = self.parseObject()
+            valueNode.value = objectNode
+        else:
             raise SyntaxError(f'Invalid token for value: {self.currentToken.literal}')
         
-        return self.currentToken
+        return valueNode
 
     def parseProgram(self) -> ProgramNode:
 
