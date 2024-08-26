@@ -9,6 +9,8 @@ class TokenTypes(Enum):
     EOF = "eof" # mark end of file
     COMMA = "comma" # comma `,`
 
+    NUMERIC = "numeric"
+
 class Token:
     def __init__(self, literal: str, type: TokenTypes) -> None:
         self.literal = literal

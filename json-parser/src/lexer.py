@@ -6,7 +6,7 @@ from .token import Token, TokenTypes
 
 
 class Lexer:
-    def __init__(self, input):
+    def __init__(self, input: str):
         self.tokens: List[Token] = []
         self.position = 0
         self.input = input
@@ -28,6 +28,15 @@ class Lexer:
             else:
                 string = string + char
         return string
+    
+    def readNumeric(self):
+        numeric = self.input[self.position - 1]
+        while char := self.readCharacter():
+            if not char.isnumeric():
+                break
+            else:
+                numeric = numeric + char
+        return numeric
     
     def skipSpaces(self):
         while char := self.readCharacter():
@@ -60,12 +69,17 @@ class Lexer:
         elif character == ",":
             token = Token(character, TokenTypes.COMMA)
             self.tokens.append(token)
-        elif character and character.isspace():
+        elif character == None:
+            token = Token("", TokenTypes.EOF)
+        elif character.isspace():
             # If character is space, skip it
             self.skipSpaces()
             return self.nextToken()
-        elif character == None:
-            token = Token("", TokenTypes.EOF)
+        elif character.isnumeric():
+            numeric = self.readNumeric()
+            token = Token(numeric, TokenTypes.NUMERIC)
+            self.tokens.append(token)
+
         else:
             raise Exception(f'character at position {self.position - 1} not recognised')
         return token
