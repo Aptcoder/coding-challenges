@@ -3,13 +3,13 @@ from enum import Enum
 
 class TokenTypes(Enum):
     LEFT_BRACE = "left_brace" # {
-    RIGTH_BRACE = "right_brace" # }
+    RIGHT_BRACE = "right_brace" # }
 
     LEFT_BRACKET = "left_bracket" # [
     RIGHT_BRACKET = "right_bracket" # ]
 
     STRING = "string" # a string
-    COLON = ":" # colong token type
+    COLON = ":" # colon token type
     EOF = "eof" # mark end of file
     COMMA = "comma" # comma `,`
 

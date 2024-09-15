@@ -82,7 +82,7 @@ class Parser:
         object_node = ObjectNode()
         self.nextToken()
 
-        while self.currentToken.type != TokenTypes.RIGTH_BRACE:
+        while self.currentToken.type != TokenTypes.RIGHT_BRACE:
             if self.currentToken.type == TokenTypes.STRING:
                 member = self.parseMember()
                 object_node.members.append(member)
@@ -93,7 +93,7 @@ class Parser:
                         self.nextToken() # Skip the comma
                     # Otherwise do nothing
                 else: # If the current token is not a comma, then that better be the end 
-                    if self.currentToken.type != TokenTypes.RIGTH_BRACE:
+                    if self.currentToken.type != TokenTypes.RIGHT_BRACE:
                         raise SyntaxError(f'Comma expected before next member')
 
             else:
