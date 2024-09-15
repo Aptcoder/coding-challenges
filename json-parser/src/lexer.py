@@ -76,7 +76,7 @@ class Lexer:
             token = Token(character, TokenTypes.LEFT_BRACE)
             self.tokens.append(token)
         elif character == "}":
-            token = Token(character, TokenTypes.RIGTH_BRACE)
+            token = Token(character, TokenTypes.RIGHT_BRACE)
             self.tokens.append(token)
         elif character == "]":
             token = Token(character, TokenTypes.RIGHT_BRACKET)
